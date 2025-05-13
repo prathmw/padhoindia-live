@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=https://us02web.zoom.us/j/84620905267?pwd=KPaRoOD2Qfbza1VRftSAM6jBIxVXhz.1#success">
+  <script>
+    // Fetch the URL from localStorage
+    window.onload = function() {
+      const redirectUrl = localStorage.getItem("redirectUrl") || "https://example.com";
+      window.location.href = redirectUrl;
+    };
+  </script>
   <title>Redirecting...</title>
 </head>
 <body>
-  <p>Redirecting to <a href="https://example.com">https://example.com</a>...</p>
+  <p>Redirecting...</p>
 </body>
 </html>
