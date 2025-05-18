@@ -2,56 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirecting...</title>
   <style>
+    /* Hide on non-mobile screens */
+    @media screen and (min-width: 768px) {
+      body {
+        display: none;
+      }
+    }
     body {
-      background-image: url('https://whatsapp-media-library.s3.ap-south-1.amazonaws.com/IMAGE/673c941b7b4ac10beb8a8360/2175837_IMG20241020WA0000.jpg');
-      background-size: cover;
-      background-position: center;
+      background-color: #f9f9f9;
       height: 100vh;
       margin: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
-    .center-text {
+    .container {
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .image {
+      width: 150px;
+      height: 150px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #333;
+    }
+    .message strong {
       font-weight: bold;
-      font-size: 1.5rem;
-      color: #fff;
-      text-shadow: 2px 2px 8px #000;
-      background: rgba(0,0,0,0.4);
-      padding: 24px 36px;
-      border-radius: 12px;
+    }
+    /* Loader animation */
+    .loader {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      width: 50px;
+      aspect-ratio: 1;
+      animation: l10-0 1.5s infinite linear;
+      margin: 20px auto;
     }
-    .dot-typing {
-      display: inline-block;
-      width: 60px;
-      height: 20px;
-      margin-top: 18px;
+    .loader:before,
+    .loader:after {
+      content: "";
+      width: 50%;
+      background: #514b82;
+      clip-path: polygon(0 0,100% 50%,0% 100%);
+      animation: inherit;
+      animation-name: l10-1;
+      transform-origin: bottom left;
     }
-    .dot-typing span {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 0 3px;
-      background: #fff;
-      border-radius: 50%;
-      opacity: 0.7;
-      animation: dotTyping 1s infinite linear;
+    .loader:before {
+      clip-path: polygon(0 50%,100% 0,100% 100%);
+      transform-origin: bottom right;
+      --s:-1;
     }
-    .dot-typing span:nth-child(2) {
-      animation-delay: 0.2s;
+    @keyframes l10-0 {
+      0%,34.99% {transform: scaley(1)}
+      35%,70%   {transform: scaley(-1)}
+      90%,100%  {transform: scaley(-1) rotate(180deg)}
     }
-    .dot-typing span:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    @keyframes dotTyping {
-      0% { opacity: 0.2; transform: translateY(0);}
-      20% { opacity: 1; transform: translateY(-6px);}
-      100% { opacity: 0.2; transform: translateY(0);}
+    @keyframes l10-1 {
+      0%,10%,70%,100%{transform:translateY(-100%) rotate(calc(var(--s,1)*135deg))}
+      35%            {transform:translateY(0%)    rotate(0deg)}
     }
   </style>
   <script>
@@ -68,11 +93,13 @@
   </script>
 </head>
 <body>
-  <div class="center-text">
-    Welcome to the padho india you will be Redirecting...to the session
-    <div class="dot-typing">
-      <span></span><span></span><span></span>
+  <div class="container">
+    <img src="https://whatsapp-media-library.s3.ap-south-1.amazonaws.com/IMAGE/673c941b7b4ac10beb8a8360/5000800_excitedremovebgpreview.png" alt="Excited Icon" class="image">
+    <div class="message">
+      <strong>Welcome to Padho India.</strong><br>
+      You will be redirected to the session.
     </div>
+    <div class="loader"></div>
   </div>
 </body>
 </html>
