@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Session Link</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f7f8fb;
+      color: #1f2937;
+      font-family: Arial, sans-serif;
+      padding: 24px;
+    }
+
+    .panel {
+      width: min(100%, 430px);
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.45rem;
+      line-height: 1.2;
+    }
+
+    .hint {
+      margin: 0 0 22px;
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font: inherit;
+      color: #111827;
+      background: #ffffff;
+    }
+
+    input:focus {
+      outline: 3px solid rgba(81, 75, 130, 0.18);
+      border-color: #514b82;
+    }
+
+    button {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 22px;
+      border: 0;
+      border-radius: 6px;
+      background: #514b82;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-top: 16px;
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .status.success {
+      color: #047857;
+    }
+
+    .status.error {
+      color: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <h1>Update Session Link</h1>
+    <p class="hint">Enter the new session link. The redirect page will use the latest active link from Supabase.</p>
+
+    <form id="sessionForm">
+      <label for="sessionUrl">Session URL</label>
+      <input id="sessionUrl" name="sessionUrl" type="url" placeholder="https://example.com/session" required>
+
+      <label for="adminPin">Admin PIN</label>
+      <input id="adminPin" name="adminPin" type="password" autocomplete="current-password" required>
+
+      <button id="submitButton" type="submit">Update Link</button>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    const SUPABASE_URL = 'https://teoqzkhmvrygndwlvgzb.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_Ty5T98IfYDNrvVyd-DM8yQ__p_Pd8TI';
+
+    const form = document.getElementById('sessionForm');
+    const submitButton = document.getElementById('submitButton');
+    const statusBox = document.getElementById('status');
+
+    function setStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = `status ${type || ''}`;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      setStatus('Updating session link...', '');
+
+      const sessionUrl = document.getElementById('sessionUrl').value.trim();
+      const adminPin = document.getElementById('adminPin').value;
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/update_session_link`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            new_url: sessionUrl,
+            admin_pin: adminPin
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || `Supabase request failed: ${response.status}`);
+        }
+
+        setStatus('Session link updated successfully.', 'success');
+        form.reset();
+      } catch (error) {
+        console.error('Error updating session link:', error);
+        setStatus('Could not update the link. Check the URL, PIN, and Supabase SQL setup.', 'error');
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
