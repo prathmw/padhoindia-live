@@ -161,7 +161,7 @@
         form.reset();
       } catch (error) {
         console.error('Error updating session link:', error);
-        setStatus('Could not update the link. Check the URL, PIN, and Supabase SQL setup.', 'error');
+        setStatus(`Could not update the link: ${error.message}`, 'error');
       } finally {
         submitButton.disabled = false;
       }
